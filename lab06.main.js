@@ -174,31 +174,7 @@ healthcheck(callback) {
    *   handles the response.
    */
   getRecord(callback) {
-    this.connector.get((response, err) => {
-      callback(response, err);
-      const keys = ['active', 'priority', 'description', 'work_start', 'work_end'];
-      if (typeof response == 'object') {
-        if (response.hasOwnProperty('body')) {
-          let data = JSON.parse(response.body).result;
-          for (const doc of data) {
-            const number = doc.number;
-            const sysId = doc.sys_id;
-            for (const prop in doc) {
-              if (!keys.includes(prop)) {
-                delete doc[prop];
-              }
-            }
-            doc.change_ticket_number = number;
-            doc.change_ticket_key = sysId;
-          }
-          callback(data, err);
-        } else {
-          callback(response, err);
-        }
-      } else {
-        callback(response, err);
-      }
-    });
+    this.connector.get(callback);
   }
 
   /**
@@ -211,34 +187,7 @@ healthcheck(callback) {
    *   handles the response.
    */
   postRecord(callback) {
-    this.connector.post((response, err) => {
-      const keys = ['active', 'priority', 'description', 'work_start', 'work_end'];
-      if (typeof response == 'object') {
-        if (response.hasOwnProperty('body')) {
-          let data = JSON.parse(response.body).result;
-          const number = data.number;
-          const sysId = data.sys_id;
-          /*for (const prop of Object.keys(data)) {
-            if (!keys.includes(prop)) {
-              delete data[prop];
-            }
-          }*/
-          for (const prop in data) {
-            if (!keys.includes(prop)) {
-              delete data[prop];
-            }
-          }
-          data.change_ticket_number = number;
-          data.change_ticket_key = sysId;
-
-          callback(data, err);
-        } else {
-          callback(response, err);
-        }
-      } else {
-        callback(response, err);
-      }
-    });  
+    this.connector.post(callback);
   }
 }
 
